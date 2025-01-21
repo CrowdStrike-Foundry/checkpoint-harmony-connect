@@ -1,0 +1,5521 @@
+{
+  "components": {
+    "schemas": {
+      "Action": {
+        "enum": [
+          "ALLOW",
+          "BLOCK",
+          null
+        ],
+        "example": "ALLOW",
+        "type": "string"
+      },
+      "AddDynamicIpConnection": {
+        "properties": {
+          "interfaceIdentifiers": {
+            "items": {
+              "$ref": "#/components/schemas/FQDN"
+            },
+            "type": "array"
+          },
+          "preSharedKey": {
+            "$ref": "#/components/schemas/PreSharedKey"
+          }
+        },
+        "required": [
+          "interfaceIdentifiers",
+          "preSharedKey"
+        ],
+        "type": "object"
+      },
+      "AddGREConnection": {
+        "properties": {
+          "externalIp": {
+            "$ref": "#/components/schemas/IPv4Address"
+          }
+        },
+        "required": [
+          "externalIp"
+        ],
+        "type": "object"
+      },
+      "AddIPSecConnection": {
+        "properties": {
+          "dynamicIpConnection": {
+            "$ref": "#/components/schemas/AddDynamicIpConnection"
+          },
+          "isDynamicIp": {
+            "description": "Set to `true` for using dynamic IP address, `false` for using static IP address.",
+            "type": "boolean"
+          },
+          "isMonitorWithDpd": {
+            "description": "Set to `true` for tunnel monitoring using dpd (dead peer detection), `false` for monitoring by traffic.",
+            "type": "boolean"
+          },
+          "staticIpConnection": {
+            "$ref": "#/components/schemas/AddStaticIpConnection"
+          }
+        },
+        "required": [
+          "isDynamicIp"
+        ],
+        "type": "object"
+      },
+      "AddRuleArgs": {
+        "properties": {
+          "addRuleInput": {
+            "$ref": "#/components/schemas/AddRuleInput"
+          },
+          "rulebaseId": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "rulebaseType": {
+            "$ref": "#/components/schemas/RulebaseType"
+          }
+        },
+        "required": [
+          "addRuleInput"
+        ],
+        "type": "object"
+      },
+      "AddRuleInput": {
+        "properties": {
+          "action": {
+            "$ref": "#/components/schemas/NotNullAction"
+          },
+          "afterRuleId": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "beforeRuleId": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "description": {
+            "$ref": "#/components/schemas/Description"
+          },
+          "disabled": {
+            "description": "Is rule disabled",
+            "type": "boolean"
+          },
+          "name": {
+            "$ref": "#/components/schemas/Name"
+          }
+        },
+        "type": "object"
+      },
+      "AddSiteInput": {
+        "properties": {
+          "address": {
+            "$ref": "#/components/schemas/Address"
+          },
+          "description": {
+            "$ref": "#/components/schemas/SiteDescription"
+          },
+          "deviceType": {
+            "$ref": "#/components/schemas/DeviceType"
+          },
+          "greConnection": {
+            "$ref": "#/components/schemas/AddGREConnection"
+          },
+          "ipsecConnection": {
+            "$ref": "#/components/schemas/AddIPSecConnection"
+          },
+          "latitude": {
+            "$ref": "#/components/schemas/Latitude"
+          },
+          "locationId": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "longitude": {
+            "$ref": "#/components/schemas/Longitude"
+          },
+          "name": {
+            "$ref": "#/components/schemas/SiteName"
+          },
+          "subnets": {
+            "$ref": "#/components/schemas/Subnets"
+          },
+          "tunnelType": {
+            "$ref": "#/components/schemas/TunnelType"
+          }
+        },
+        "required": [
+          "name",
+          "subnets",
+          "tunnelType"
+        ],
+        "type": "object"
+      },
+      "AddStaticIpConnection": {
+        "properties": {
+          "externalIps": {
+            "items": {
+              "$ref": "#/components/schemas/IPv4Address"
+            },
+            "type": "array"
+          },
+          "preSharedKey": {
+            "$ref": "#/components/schemas/PreSharedKey"
+          }
+        },
+        "required": [
+          "externalIps",
+          "preSharedKey"
+        ],
+        "type": "object"
+      },
+      "Address": {
+        "description": "Street, city and country of a site's physical location. And address could also be simply the city, country and state, as it is only used to show your site on a world map at Infinity Portal. While address is an optional parameter, in case a site creation request lacks the location parameter, Check Point will use the location parameter provided either by longitude and latitude, or by the address, and will select the most fitting location automatically.",
+        "example": "1640 Riverside Drive, Hill Valley, California",
+        "type": "string"
+      },
+      "Application": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseApplication"
+          },
+          {
+            "properties": {
+              "categories": {
+                "items": {
+                  "$ref": "#/components/schemas/ApplicationCategory"
+                },
+                "type": "array"
+              },
+              "description": {
+                "$ref": "#/components/schemas/Description"
+              },
+              "primaryCategory": {
+                "$ref": "#/components/schemas/ApplicationCategory"
+              },
+              "riskLevel": {
+                "type": "integer"
+              },
+              "serviceGroups": {
+                "items": {
+                  "$ref": "#/components/schemas/ServiceGroups"
+                },
+                "type": "array"
+              },
+              "services": {
+                "items": {
+                  "$ref": "#/components/schemas/Service"
+                },
+                "type": "array"
+              }
+            },
+            "type": "object"
+          }
+        ]
+      },
+      "ApplicationCategory": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseApplicationCategory"
+          },
+          {
+            "properties": {
+              "description": {
+                "$ref": "#/components/schemas/Description"
+              }
+            },
+            "type": "object"
+          }
+        ]
+      },
+      "AuthToken": {
+        "description": "Authentication token to be used in \"Authorization\" request headers for other operations",
+        "example": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZW5hbnRJZCI6ImEwOGJiZWY3LTE4NDAtNDFlZC05ZWQzLWUyZDZlNGUyMGUxMyIsImNzcmYiOiI2MmJkOGM1OC02NmY5LTQ2YzktYjk3Mi00ZmQzMjhlMjY3NTQiLCJzZXNzaW9uSWQiOiJkOTI4ZDA2NS1mZDRiLTRlNGYtYTU1My00M2JlZjM0MDQ3MmIiLCJjbGllbnRJZCI6IjIwMGJhMTdmLWIzYTItNGM3MC1iOThjLTEzMzI4MDZkNDFhNCIsImRlc2NyaXB0aW9uIjoiQVBJIHRlc3QiLCJhcHBJZCI6IjEyMzQ1Njc4LTY2NjYtMTIzNC0xMjM0LTEyMzQ1Njc4OTEyMyIsInJvbGUiOiJBZG1pbiIsInNjb3BlIjpudWxsLCJpc3N1ZWRCeSI6InRvbWVyc29AY2hlY2twb2ludC5jb20iLCJjb29raWVWZXJzaW9uIjo0LCJpYXQiOjE1NjUxMDk1NTMsImV4cCI6MTU2NTExMTM1M30.K_aZkhIxHdHIHwsqbMCYt31yzpeynbSqPWBk5UC0v0QvG7cxSDN5BcxO0XisKp31mFINCBk8mOcrgRPABtic70iQQ9bVjW1HLPBeLvHRD0rZUUCR7D70LbT-9bgDYyvnAAo6oCBzAAoVNra0S7Vqpx7AW9ET190XRDHHbsZgpmZlZQpn0MOtn7k8GTDJcXa7WYzEtSfOFuqx8TSdvxC6ihy4AWd_zSucydQ-Y3JWLqJt6E2OwK1lZMbtPwpcgFrVtewwcRymoNmSCz9JktbD8yQi6vD241a6_BsTxKDuIW-6R9_g0SJBpVCaDfCYhtYt6x3_2v0ZDdTqG50HLfB6ObwN4iEFVkNZHa8rCEQTBrUmgfDczKhxxa5elzxuxO2a4jNBEUF4zAmvRZSwFT5YaZHqCpKUUWlY2QD8V-gDnKJiwtR_HydGwYdfSMKZkYO0fVEG_HeqxiuIXV3od53ndH_evvK_TbxcxJkR5c2e-LcuZf6BLrxacHkWneTOT3XNsjgGLaj4if5sQu3v7e3_b-vfk3tH_1Z0CR9a4HwleDpWnX6FJwCVyk8U1g29r7svdv94t_N-WnomHOTa7ZHP4xX5NersEUouVLvVXVdoB5AUojvJUdrYjSWd6fy4MEer_JWIosDU4-SwkuRMXfXyYry1-aOMvBKmtIQrDAEDkmU",
+        "type": "string"
+      },
+      "BaseApplication": {
+        "properties": {
+          "icon": {
+            "$ref": "#/components/schemas/Icon"
+          },
+          "id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "name": {
+            "$ref": "#/components/schemas/Name"
+          }
+        },
+        "type": "object"
+      },
+      "BaseApplicationCategory": {
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "name": {
+            "$ref": "#/components/schemas/Name"
+          }
+        },
+        "type": "object"
+      },
+      "BaseCustomDestination": {
+        "properties": {
+          "description": {
+            "$ref": "#/components/schemas/Description"
+          },
+          "id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "isUsed": {
+            "type": "boolean"
+          },
+          "name": {
+            "$ref": "#/components/schemas/Name"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ObjectStatus"
+          }
+        },
+        "type": "object"
+      },
+      "BaseCustomService": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/IService"
+          },
+          {
+            "properties": {
+              "description": {
+                "$ref": "#/components/schemas/Description"
+              },
+              "id": {
+                "$ref": "#/components/schemas/ID"
+              },
+              "isUsed": {
+                "type": "boolean"
+              },
+              "name": {
+                "$ref": "#/components/schemas/Name"
+              },
+              "portRange": {
+                "$ref": "#/components/schemas/PortRange"
+              },
+              "protocol": {
+                "$ref": "#/components/schemas/NetworkProtocol"
+              },
+              "protocolType": {
+                "$ref": "#/components/schemas/NetworkProtocolType"
+              },
+              "status": {
+                "$ref": "#/components/schemas/ObjectStatus"
+              }
+            },
+            "type": "object"
+          }
+        ]
+      },
+      "BaseCustomSource": {
+        "properties": {
+          "description": {
+            "$ref": "#/components/schemas/Description"
+          },
+          "id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "isUsed": {
+            "type": "boolean"
+          },
+          "name": {
+            "$ref": "#/components/schemas/Name"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ObjectStatus"
+          }
+        },
+        "type": "object"
+      },
+      "BaseCustomURL": {
+        "properties": {
+          "description": {
+            "$ref": "#/components/schemas/Description"
+          },
+          "id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "isRegexp": {
+            "type": "boolean"
+          },
+          "isUsed": {
+            "type": "boolean"
+          },
+          "name": {
+            "$ref": "#/components/schemas/Name"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ObjectStatus"
+          }
+        },
+        "type": "object"
+      },
+      "BaseDataContent": {
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "name": {
+            "$ref": "#/components/schemas/Name"
+          }
+        },
+        "type": "object"
+      },
+      "BaseFileContent": {
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "name": {
+            "$ref": "#/components/schemas/Name"
+          }
+        },
+        "type": "object"
+      },
+      "BaseIDPUser": {
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "isUsed": {
+            "type": "boolean"
+          },
+          "name": {
+            "$ref": "#/components/schemas/Name"
+          }
+        },
+        "type": "object"
+      },
+      "BaseIDPUserGroup": {
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "isUsed": {
+            "type": "boolean"
+          },
+          "name": {
+            "$ref": "#/components/schemas/Name"
+          }
+        },
+        "type": "object"
+      },
+      "BasePolicyUser": {
+        "properties": {
+          "description": {
+            "$ref": "#/components/schemas/Description"
+          },
+          "icon": {
+            "$ref": "#/components/schemas/Icon"
+          },
+          "id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "identityIdentifier": {
+            "$ref": "#/components/schemas/IdentityIdentifier"
+          },
+          "isUsed": {
+            "type": "boolean"
+          },
+          "name": {
+            "$ref": "#/components/schemas/Name"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ObjectStatus"
+          }
+        },
+        "type": "object"
+      },
+      "BasePolicyUserGroup": {
+        "properties": {
+          "description": {
+            "$ref": "#/components/schemas/Description"
+          },
+          "icon": {
+            "$ref": "#/components/schemas/Icon"
+          },
+          "id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "identityIdentifier": {
+            "$ref": "#/components/schemas/IdentityIdentifier"
+          },
+          "isUsed": {
+            "type": "boolean"
+          },
+          "name": {
+            "$ref": "#/components/schemas/Name"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ObjectStatus"
+          }
+        },
+        "type": "object"
+      },
+      "BaseRulebase": {
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "type": {
+            "$ref": "#/components/schemas/RulebaseType"
+          }
+        },
+        "type": "object"
+      },
+      "BaseServiceGroups": {
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "name": {
+            "$ref": "#/components/schemas/Name"
+          }
+        },
+        "type": "object"
+      },
+      "BaseTrustProfile": {
+        "properties": {
+          "description": {
+            "$ref": "#/components/schemas/Description"
+          },
+          "icon": {
+            "$ref": "#/components/schemas/Icon"
+          },
+          "id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "name": {
+            "$ref": "#/components/schemas/Name"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ObjectStatus"
+          }
+        },
+        "type": "object"
+      },
+      "By": {
+        "type": "string"
+      },
+      "CertificateCommonName": {
+        "type": "string"
+      },
+      "Comment": {
+        "type": "string"
+      },
+      "Content": {
+        "properties": {
+          "category": {
+            "$ref": "#/components/schemas/ContentCategory"
+          },
+          "id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "name": {
+            "$ref": "#/components/schemas/Name"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ObjectStatus"
+          },
+          "typeName": {
+            "$ref": "#/components/schemas/TypeName"
+          }
+        },
+        "type": "object"
+      },
+      "ContentCategory": {
+        "enum": [
+          "FILE_DATA_TYPE",
+          "PATTERN_DATA_TYPE",
+          "WORDS_DATA_TYPE",
+          "WEIGHTED_WORDS_DATA_TYPE",
+          "GROUP_DATA_TYPE",
+          "COMPOUND_DATA_TYPE",
+          "CUSTOM_DATA_TYPE",
+          null
+        ],
+        "example": "FILE_DATA_TYPE",
+        "type": "string"
+      },
+      "CustomDestination": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseCustomDestination"
+          },
+          {
+            "properties": {
+              "networks": {
+                "items": {
+                  "$ref": "#/components/schemas/CustomNetwork"
+                },
+                "type": "array"
+              },
+              "services": {
+                "items": {
+                  "$ref": "#/components/schemas/IService"
+                },
+                "type": "array"
+              }
+            },
+            "type": "object"
+          }
+        ]
+      },
+      "CustomNetwork": {
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "network": {
+            "$ref": "#/components/schemas/Network"
+          }
+        },
+        "type": "object"
+      },
+      "CustomService": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseCustomService"
+          },
+          {
+            "type": "object"
+          }
+        ]
+      },
+      "CustomSource": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseCustomSource"
+          },
+          {
+            "properties": {
+              "networks": {
+                "items": {
+                  "$ref": "#/components/schemas/CustomNetwork"
+                },
+                "type": "array"
+              }
+            },
+            "type": "object"
+          }
+        ]
+      },
+      "CustomURL": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseCustomURL"
+          },
+          {
+            "properties": {
+              "urls": {
+                "items": {
+                  "$ref": "#/components/schemas/URL"
+                },
+                "type": "array"
+              }
+            },
+            "type": "object"
+          }
+        ]
+      },
+      "DataContent": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseDataContent"
+          },
+          {
+            "properties": {
+              "category": {
+                "$ref": "#/components/schemas/ContentCategory"
+              },
+              "description": {
+                "$ref": "#/components/schemas/Description"
+              },
+              "descriptionNote": {
+                "$ref": "#/components/schemas/DescriptionNote"
+              },
+              "examples": {
+                "items": {
+                  "$ref": "#/components/schemas/Examples"
+                },
+                "type": "array"
+              },
+              "relatedDataTypes": {
+                "items": {
+                  "$ref": "#/components/schemas/RelatedDataTypes"
+                },
+                "type": "array"
+              },
+              "relatedFileTypes": {
+                "items": {
+                  "$ref": "#/components/schemas/RelatedFileTypes"
+                },
+                "type": "array"
+              }
+            },
+            "type": "object"
+          }
+        ]
+      },
+      "Description": {
+        "description": "Description",
+        "example": "Description of the object",
+        "type": "string"
+      },
+      "DescriptionNote": {
+        "description": "Description Note",
+        "example": "Description Note of the object",
+        "type": "string"
+      },
+      "Destination": {
+        "properties": {
+          "icon": {
+            "$ref": "#/components/schemas/Icon"
+          },
+          "id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "name": {
+            "$ref": "#/components/schemas/Name"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ObjectStatus"
+          },
+          "typeName": {
+            "$ref": "#/components/schemas/TypeName"
+          }
+        },
+        "type": "object"
+      },
+      "DeviceType": {
+        "description": "Device type:\n * `GENERIC-DEVICE` - Generic device\n * `CHECK-POINT-GATEWAY` - Check Point Gateway\n * `CHECK-POINT-SMB` - Check Point SMB gateway\n * `CISCO` - Cisco router\n * `CISCO-SD-WAN` - Cisco (Viptela) SD-WAN\n * `CISCO-MERAKI` - Cisco Meraki\n * `CITRIX` - Citrix SD-WAN\n * `SILVER-PEAK` - Silver Peak Unity EdgeConnect. For more on Check Point and Silver Peak, read the [Integration Guide](https://sc1.checkpoint.com/documents/integrations/SilverPeak/check-point-silver-peak-integration.html).\n * `VERSA` - Versa SD-WAN\n * `ARUBA-SD-BRANCH` - Aruba SD-Branch\n * `CLOUD-GENIX` - CloudGenix\n * `VMWARE-SD-WAN` - WMWare SD-WAN For more on Check Point and VMWare, read the [Integration Guide](https://sc1.checkpoint.com/documents/integrations/VeloCloud/check-point-VeloCloud-integration.html).\n * `ARYAKA` - Aryka SD-WAN\n * `NUAGE` - Nokia (Nuage) SD-WAN\n * `ORACLE` - Oracle (Talari) SD-WAN\n * `ASAVIE` - Asavie SD-WAN",
+        "enum": [
+          "GENERIC-DEVICE",
+          "CHECK-POINT-GATEWAY",
+          "CHECK-POINT-SMB",
+          "CISCO",
+          "CISCO-SD-WAN",
+          "CISCO-MERAKI",
+          "CITRIX",
+          "SILVER-PEAK",
+          "VERSA",
+          "ARUBA-SD-BRANCH",
+          "CLOUD-GENIX",
+          "VMWARE-SD-WAN",
+          "ARYAKA",
+          "NUAGE",
+          "ORACLE",
+          "ASAVIE"
+        ],
+        "example": "GENERIC-DEVICE",
+        "type": "string"
+      },
+      "DynamicIpConnection": {
+        "properties": {
+          "interfaceIdentifiers": {
+            "items": {
+              "$ref": "#/components/schemas/FQDN"
+            },
+            "type": "array"
+          },
+          "preSharedKey": {
+            "$ref": "#/components/schemas/PreSharedKey"
+          }
+        },
+        "type": "object"
+      },
+      "Error": {
+        "properties": {
+          "message": {
+            "example": "Error message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "message"
+        ],
+        "type": "object"
+      },
+      "ErrorsResponse": {
+        "properties": {
+          "errors": {
+            "items": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "Examples": {
+        "type": "string"
+      },
+      "ExceptionList": {
+        "enum": [
+          "INSPECT",
+          "BYPASS"
+        ],
+        "example": "INSPECT",
+        "type": "string"
+      },
+      "ExceptionMode": {
+        "enum": [
+          "INSPECT_ANY",
+          "INSPECT",
+          "BYPASS",
+          null
+        ],
+        "example": "INSPECT",
+        "type": "string"
+      },
+      "FQDN": {
+        "description": "Fully qualified domain name (FQDN) -  consisting of the hostname and the domain name.",
+        "example": "mydomain.hostname.com",
+        "type": "string"
+      },
+      "FileContent": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseFileContent"
+          },
+          {
+            "properties": {
+              "category": {
+                "$ref": "#/components/schemas/ContentCategory"
+              },
+              "description": {
+                "$ref": "#/components/schemas/Description"
+              },
+              "descriptionNote": {
+                "$ref": "#/components/schemas/DescriptionNote"
+              },
+              "examples": {
+                "items": {
+                  "$ref": "#/components/schemas/Examples"
+                },
+                "type": "array"
+              },
+              "relatedFileTypes": {
+                "items": {
+                  "$ref": "#/components/schemas/RelatedFileTypes"
+                },
+                "type": "array"
+              }
+            },
+            "type": "object"
+          }
+        ]
+      },
+      "GREConnection": {
+        "properties": {
+          "externalIp": {
+            "$ref": "#/components/schemas/IPv4Address"
+          }
+        },
+        "type": "object"
+      },
+      "GRETunnel": {
+        "properties": {
+          "destinationIp": {
+            "$ref": "#/components/schemas/IPv4Address"
+          },
+          "internalIp": {
+            "$ref": "#/components/schemas/IPv4Address"
+          },
+          "mask": {
+            "$ref": "#/components/schemas/NetMask"
+          },
+          "pingIp": {
+            "$ref": "#/components/schemas/IPv4Address"
+          },
+          "routeIp": {
+            "$ref": "#/components/schemas/IPv4Address"
+          }
+        },
+        "type": "object"
+      },
+      "GRETunnelParameters": {
+        "description": "GRE tunnel parameters",
+        "properties": {
+          "mss": {
+            "$ref": "#/components/schemas/TunnelMSS"
+          },
+          "mtu": {
+            "$ref": "#/components/schemas/TunnelMTU"
+          },
+          "tunnels": {
+            "items": {
+              "$ref": "#/components/schemas/GRETunnel"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "GetAuthTokenInput": {
+        "properties": {
+          "accessKey": {
+            "description": "Secret Key, retrieved from Check Point Infinity portal (Global settings -\u003e API Keys)",
+            "example": "8edfba157728495c9e21fba1b214169a",
+            "type": "string"
+          },
+          "clientId": {
+            "description": "Client ID, retrieved from Check Point Infinity portal (Global settings -\u003e API Keys)",
+            "example": "891f02eb7b2947a2b4b2d77c6cffc054",
+            "type": "string"
+          }
+        },
+        "required": [
+          "accessKey",
+          "clientId"
+        ],
+        "type": "object"
+      },
+      "HttpsInspection": {
+        "properties": {
+          "certificateCommonName": {
+            "$ref": "#/components/schemas/CertificateCommonName"
+          },
+          "certificateExpirationDate": {
+            "type": "number"
+          },
+          "destinationsBypass": {
+            "items": {
+              "$ref": "#/components/schemas/Destination"
+            },
+            "type": "array"
+          },
+          "isConfiguringCertificate": {
+            "type": "boolean"
+          },
+          "level": {
+            "$ref": "#/components/schemas/InspectionLevel"
+          },
+          "sourceListExceptionMode": {
+            "$ref": "#/components/schemas/ExceptionMode"
+          },
+          "sourcesBypass": {
+            "items": {
+              "$ref": "#/components/schemas/Source"
+            },
+            "type": "array"
+          },
+          "sourcesInspect": {
+            "items": {
+              "$ref": "#/components/schemas/Source"
+            },
+            "type": "array"
+          },
+          "status": {
+            "items": {
+              "$ref": "#/components/schemas/httpsStatus"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "HttpsInspectionSourcesInput": {
+        "properties": {
+          "listType": {
+            "$ref": "#/components/schemas/ExceptionList"
+          },
+          "sourceIds": {
+            "items": {
+              "$ref": "#/components/schemas/NotNullID"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "listType",
+          "sourceIds"
+        ],
+        "type": "object"
+      },
+      "ID": {
+        "description": "Object unique ID",
+        "example": "11111111-1111-1111-1111-111111111111",
+        "type": "string"
+      },
+      "IDPUser": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseIDPUser"
+          },
+          {
+            "type": "object"
+          }
+        ]
+      },
+      "IDPUserGroup": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseIDPUserGroup"
+          },
+          {
+            "type": "object"
+          }
+        ]
+      },
+      "IPSecConnection": {
+        "properties": {
+          "dynamicIpConnection": {
+            "$ref": "#/components/schemas/DynamicIpConnection"
+          },
+          "isDynamicIp": {
+            "description": "Set to `true` for using dynamic IP address, `false` for using static IP address.",
+            "type": "boolean"
+          },
+          "isMonitorWithDpd": {
+            "description": "Set to `true` for tunnel monitoring using dpd (dead peer detection), `false` for monitoring by traffic.",
+            "type": "boolean"
+          },
+          "staticIpConnection": {
+            "$ref": "#/components/schemas/StaticIpConnection"
+          }
+        },
+        "type": "object"
+      },
+      "IPSecPhase1Parameters": {
+        "properties": {
+          "dataIntegrity": {
+            "enum": [
+              "SHA1"
+            ],
+            "type": "string"
+          },
+          "diffieHellmanGroup": {
+            "enum": [
+              "GROUP-2-1024-BIT"
+            ],
+            "type": "string"
+          },
+          "encryption": {
+            "enum": [
+              "AES-256"
+            ],
+            "type": "string"
+          },
+          "renegotiateInterval": {
+            "description": "Interval (in seconds) between tunnel re-negotiation",
+            "example": 86400,
+            "type": "integer"
+          }
+        },
+        "type": "object"
+      },
+      "IPSecPhase2Parameters": {
+        "properties": {
+          "dataIntegrity": {
+            "enum": [
+              "SHA1"
+            ],
+            "type": "string"
+          },
+          "encryption": {
+            "enum": [
+              "AES-256"
+            ],
+            "type": "string"
+          },
+          "renegotiateInterval": {
+            "description": "Interval (in seconds) between tunnel re-negotiation",
+            "example": 3600,
+            "type": "integer"
+          }
+        },
+        "type": "object"
+      },
+      "IPSecTunnel": {
+        "properties": {
+          "destination": {
+            "$ref": "#/components/schemas/FQDN"
+          },
+          "testIp": {
+            "$ref": "#/components/schemas/IPv4Address"
+          }
+        },
+        "type": "object"
+      },
+      "IPSecTunnelParameters": {
+        "properties": {
+          "internetKeyExchange": {
+            "items": {
+              "$ref": "#/components/schemas/InternetKeyExchange"
+            },
+            "type": "array"
+          },
+          "phase1": {
+            "$ref": "#/components/schemas/IPSecPhase1Parameters"
+          },
+          "phase2": {
+            "$ref": "#/components/schemas/IPSecPhase2Parameters"
+          },
+          "tunnels": {
+            "items": {
+              "$ref": "#/components/schemas/IPSecTunnel"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "IPv4Address": {
+        "description": "IPv4 Address",
+        "example": "93.184.216.34",
+        "type": "string"
+      },
+      "IService": {
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "name": {
+            "$ref": "#/components/schemas/Name"
+          }
+        },
+        "type": "object"
+      },
+      "IThreatPreventionProtection": {
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "name": {
+            "$ref": "#/components/schemas/Name"
+          },
+          "typeName": {
+            "$ref": "#/components/schemas/TypeName"
+          }
+        },
+        "type": "object"
+      },
+      "IThreatPreventionScope": {
+        "properties": {
+          "icon": {
+            "$ref": "#/components/schemas/Icon"
+          },
+          "id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "name": {
+            "$ref": "#/components/schemas/Name"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ObjectStatus"
+          },
+          "typeName": {
+            "$ref": "#/components/schemas/TypeName"
+          }
+        },
+        "type": "object"
+      },
+      "Icon": {
+        "description": "Icon",
+        "example": "Object Icon",
+        "type": "string"
+      },
+      "IdentityAwareness": {
+        "properties": {
+          "excludedNetworks": {
+            "items": {
+              "$ref": "#/components/schemas/CustomNetwork"
+            },
+            "type": "array"
+          },
+          "hasChanges": {
+            "type": "boolean"
+          },
+          "isChangingIdp": {
+            "type": "boolean"
+          },
+          "mode": {
+            "$ref": "#/components/schemas/Mode"
+          },
+          "state": {
+            "$ref": "#/components/schemas/SessionState"
+          }
+        },
+        "type": "object"
+      },
+      "IdentityAwarenessInput": {
+        "properties": {
+          "addExcludedNetworks": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "editExcludedNetworks": {
+            "items": {
+              "$ref": "#/components/schemas/UpdateCustomNetworkInput"
+            },
+            "type": "array"
+          },
+          "mode": {
+            "$ref": "#/components/schemas/Mode"
+          },
+          "removeExcludedNetworks": {
+            "items": {
+              "$ref": "#/components/schemas/NotNullID"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "IdentityIdentifier": {
+        "type": "string"
+      },
+      "InspectionLevel": {
+        "enum": [
+          "BASIC",
+          "FULL",
+          null
+        ],
+        "example": "BASIC",
+        "type": "string"
+      },
+      "InstallState": {
+        "enum": [
+          "INIT",
+          "IN_PROGRESS",
+          "SUCCESS",
+          "FAILED",
+          null
+        ],
+        "example": "INIT",
+        "type": "string"
+      },
+      "InternetKeyExchange": {
+        "description": "Internet key exchange:\n * `IKE-V1` - IKE V1\n * `IKE-V2` - IKE V2",
+        "enum": [
+          "IKE-V1",
+          "IKE-V2"
+        ],
+        "example": "IKE-V1",
+        "type": "string"
+      },
+      "Latitude": {
+        "description": "Latitude of a site's physical location. While latitude is an optional parameter and is used to show your site on a world map at Infinity Portal, in case a site creation request lacks the location parameter, Check Point will use the location parameter provided by longitude and latitude, or by the address, and will select the most fitting location automatically.",
+        "example": 32.0696697,
+        "type": "number"
+      },
+      "Location": {
+        "example": {
+          "id": "22222222-2222-2222-222222222222",
+          "name": "US: South East"
+        },
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "name": {
+            "$ref": "#/components/schemas/LocationName"
+          }
+        },
+        "type": "object"
+      },
+      "LocationName": {
+        "description": "The name of a location of Check Point's cloud service as pre-defined by Check Point.",
+        "example": "US: South East",
+        "type": "string"
+      },
+      "Longitude": {
+        "description": "Longitude of a site's physical location. While longitude is an optional parameter and is used to show your site on a world map at Infinity Portal, in case a site creation request lacks the location parameter, Check Point will use the location parameter provided by longitude and latitude, or by the address, and will select the most fitting location automatically.",
+        "example": 34.7955017,
+        "type": "number"
+      },
+      "MatchSearch": {
+        "default": "",
+        "description": "Match Search",
+        "example": "Something",
+        "type": "string"
+      },
+      "Mode": {
+        "enum": [
+          "OFF",
+          "ON",
+          "BRANCH_OFFICE_ON",
+          "ROAMING_USERS_ON",
+          null
+        ],
+        "example": "ON",
+        "type": "string"
+      },
+      "MovementRestriction": {
+        "description": "todo - to complete the description",
+        "enum": [
+          "PINNED",
+          "PINNED_UP",
+          "PINNED_DOWN",
+          null
+        ],
+        "example": "PINNED",
+        "type": "string"
+      },
+      "Name": {
+        "description": "Name",
+        "example": "Object Name",
+        "type": "string"
+      },
+      "NetMask": {
+        "description": "Network mask",
+        "example": "255.255.255.0",
+        "type": "string"
+      },
+      "Network": {
+        "description": "Network",
+        "type": "string"
+      },
+      "NetworkProtocol": {
+        "enum": [
+          "NONE",
+          "TCP_DNS",
+          "TCP_FTP",
+          "TCP_HTTP",
+          "TCP_HTTPS",
+          "TCP_IMAP",
+          "TCP_POP3",
+          "TCP_SMTP",
+          "TCP_SSH_V2",
+          "TCP_SSH_V3",
+          "TCP_TELNET",
+          "TCP_TLS10",
+          "TCP_TLS11",
+          "TCP_TLS12",
+          "UDP_DHCP",
+          "UDP_DNS",
+          "UDP_IKE",
+          "UDP_IKENAT_TRAVERSAL",
+          "UDP_KERBEROS",
+          "UDP_LDAP",
+          "UDP_RADIUS",
+          "UDP_RDP",
+          "UDP_SIP",
+          "UDP_SYSLOG",
+          "UDP_TFTP",
+          null
+        ],
+        "example": "TCP_DNS",
+        "type": "string"
+      },
+      "NetworkProtocolType": {
+        "description": "The Network Protocol Type",
+        "enum": [
+          "TCP",
+          "UDP",
+          "ICMP",
+          "ICMP6",
+          "OTHER",
+          null
+        ],
+        "example": "TCP",
+        "type": "string"
+      },
+      "NewCustomDestinationInput": {
+        "properties": {
+          "description": {
+            "$ref": "#/components/schemas/Description"
+          },
+          "name": {
+            "$ref": "#/components/schemas/NotNullName"
+          },
+          "networks": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "services": {
+            "items": {
+              "$ref": "#/components/schemas/NotNullID"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "name",
+          "networks",
+          "services"
+        ],
+        "type": "object"
+      },
+      "NewCustomServiceInput": {
+        "properties": {
+          "description": {
+            "$ref": "#/components/schemas/Description"
+          },
+          "name": {
+            "$ref": "#/components/schemas/NotNullName"
+          },
+          "portRange": {
+            "$ref": "#/components/schemas/NotNullPortRange"
+          },
+          "protocol": {
+            "$ref": "#/components/schemas/NotNullNetworkProtocol"
+          },
+          "protocolType": {
+            "$ref": "#/components/schemas/NotNullNetworkProtocolType"
+          }
+        },
+        "required": [
+          "name",
+          "portRange",
+          "protocol",
+          "protocolType"
+        ],
+        "type": "object"
+      },
+      "NewCustomSourceInput": {
+        "properties": {
+          "description": {
+            "$ref": "#/components/schemas/Description"
+          },
+          "name": {
+            "$ref": "#/components/schemas/NotNullName"
+          },
+          "networks": {
+            "items": {
+              "$ref": "#/components/schemas/NotNullNetwork"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "name",
+          "networks"
+        ],
+        "type": "object"
+      },
+      "NewCustomURLInput": {
+        "properties": {
+          "description": {
+            "$ref": "#/components/schemas/Description"
+          },
+          "isRegexp": {
+            "type": "boolean"
+          },
+          "name": {
+            "$ref": "#/components/schemas/NotNullName"
+          },
+          "urls": {
+            "items": {
+              "$ref": "#/components/schemas/NotNullURL"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "isRegexp",
+          "name",
+          "urls"
+        ],
+        "type": "object"
+      },
+      "NewPolicyUserGroupInput": {
+        "properties": {
+          "description": {
+            "$ref": "#/components/schemas/Description"
+          },
+          "identityIdentifier": {
+            "$ref": "#/components/schemas/NotNullIdentityIdentifier"
+          },
+          "name": {
+            "$ref": "#/components/schemas/NotNullName"
+          }
+        },
+        "required": [
+          "identityIdentifier",
+          "name"
+        ],
+        "type": "object"
+      },
+      "NewPolicyUserInput": {
+        "properties": {
+          "description": {
+            "$ref": "#/components/schemas/Description"
+          },
+          "identityIdentifier": {
+            "$ref": "#/components/schemas/NotNullIdentityIdentifier"
+          },
+          "name": {
+            "$ref": "#/components/schemas/NotNullName"
+          }
+        },
+        "required": [
+          "identityIdentifier",
+          "name"
+        ],
+        "type": "object"
+      },
+      "NewThreatPreventionExceptionProtectionInput": {
+        "properties": {
+          "comment": {
+            "$ref": "#/components/schemas/Comment"
+          },
+          "disableTime": {
+            "type": "number"
+          },
+          "notificationTime": {
+            "type": "number"
+          },
+          "protections": {
+            "items": {
+              "$ref": "#/components/schemas/NotNullID"
+            },
+            "type": "array"
+          },
+          "scope": {
+            "items": {
+              "$ref": "#/components/schemas/NotNullID"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "protections"
+        ],
+        "type": "object"
+      },
+      "NotNullAction": {
+        "enum": [
+          "ALLOW",
+          "BLOCK"
+        ],
+        "example": "ALLOW",
+        "type": "string"
+      },
+      "NotNullID": {
+        "description": "Object unique ID",
+        "example": "11111111-1111-1111-1111-111111111111",
+        "type": "string"
+      },
+      "NotNullIdentityIdentifier": {
+        "type": "string"
+      },
+      "NotNullName": {
+        "description": "Name",
+        "example": "Object Name",
+        "type": "string"
+      },
+      "NotNullNetwork": {
+        "description": "Network or IP",
+        "example": "1.2.3.4",
+        "type": "string"
+      },
+      "NotNullNetworkProtocol": {
+        "enum": [
+          "NONE",
+          "TCP_DNS",
+          "TCP_FTP",
+          "TCP_HTTP",
+          "TCP_HTTPS",
+          "TCP_IMAP",
+          "TCP_POP3",
+          "TCP_SMTP",
+          "TCP_SSH_V2",
+          "TCP_SSH_V3",
+          "TCP_TELNET",
+          "TCP_TLS10",
+          "TCP_TLS11",
+          "TCP_TLS12",
+          "UDP_DHCP",
+          "UDP_DNS",
+          "UDP_IKE",
+          "UDP_IKENAT_TRAVERSAL",
+          "UDP_KERBEROS",
+          "UDP_LDAP",
+          "UDP_RADIUS",
+          "UDP_RDP",
+          "UDP_SIP",
+          "UDP_SYSLOG",
+          "UDP_TFTP"
+        ],
+        "example": "TCP_DNS",
+        "type": "string"
+      },
+      "NotNullNetworkProtocolType": {
+        "description": "The Network Protocol Type",
+        "enum": [
+          "TCP",
+          "UDP",
+          "ICMP",
+          "ICMP6",
+          "OTHER"
+        ],
+        "example": "TCP",
+        "type": "string"
+      },
+      "NotNullPortRange": {
+        "example": "2000-3000",
+        "type": "string"
+      },
+      "NotNullURL": {
+        "description": "URL",
+        "type": "string"
+      },
+      "ObjectStatus": {
+        "description": "todo - to complete the description",
+        "enum": [
+          "NORMAL",
+          "LOCK",
+          "EDIT",
+          "NEW",
+          "DELETED",
+          "ERROR",
+          "INACTIVE",
+          null
+        ],
+        "example": "NORMAL",
+        "type": "string"
+      },
+      "PaginationResponseBase": {
+        "properties": {
+          "limit": {
+            "example": 100,
+            "type": "integer"
+          },
+          "offset": {
+            "example": 0,
+            "type": "integer"
+          },
+          "total": {
+            "example": 300,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "limit",
+          "offset",
+          "total"
+        ],
+        "type": "object"
+      },
+      "PolicyError": {
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "PolicyState": {
+        "enum": [
+          "INIT",
+          "IN_PROGRESS",
+          "SUCCESS",
+          "FAILED",
+          null
+        ],
+        "example": "INIT",
+        "type": "string"
+      },
+      "PolicyStatus": {
+        "properties": {
+          "installState": {
+            "$ref": "#/components/schemas/InstallState"
+          },
+          "isInstallInProgress": {
+            "type": "boolean"
+          },
+          "isPublishAllowed": {
+            "type": "boolean"
+          },
+          "sessionsToInstall": {
+            "items": {
+              "$ref": "#/components/schemas/SessionDetails"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "PolicyUser": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BasePolicyUser"
+          },
+          {
+            "type": "object"
+          }
+        ]
+      },
+      "PolicyUserGroup": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BasePolicyUserGroup"
+          },
+          {
+            "type": "object"
+          }
+        ]
+      },
+      "PortRange": {
+        "example": "2000-3000",
+        "type": "string"
+      },
+      "PreSharedKey": {
+        "description": "Pre shared authentication key.\n\nMust follow the following constraints:\n\n\u003cli\u003e Must contain at least 6 chars.\u003c/li\u003e \u003cli\u003e Must contain one capital letter. \u003cli\u003e Must contain one small letter.\u003c/li\u003e \u003cli\u003e Must contain one number.\u003c/li\u003e \u003cli\u003e Must contain at least 4 different characters.\u003c/li\u003e",
+        "example": "asdfghjk123",
+        "type": "string"
+      },
+      "PredefinedPolicyObject": {
+        "properties": {
+          "description": {
+            "$ref": "#/components/schemas/Description"
+          },
+          "icon": {
+            "$ref": "#/components/schemas/Icon"
+          },
+          "id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "name": {
+            "$ref": "#/components/schemas/Name"
+          },
+          "typeName": {
+            "$ref": "#/components/schemas/TypeName"
+          }
+        },
+        "type": "object"
+      },
+      "PublishChangesResult": {
+        "properties": {
+          "errors": {
+            "items": {
+              "$ref": "#/components/schemas/PolicyError"
+            },
+            "type": "array"
+          },
+          "publishState": {
+            "$ref": "#/components/schemas/PolicyState"
+          },
+          "typeName": {
+            "$ref": "#/components/schemas/TypeName"
+          }
+        },
+        "type": "object"
+      },
+      "RelatedDataTypes": {
+        "type": "string"
+      },
+      "RelatedFileTypes": {
+        "type": "string"
+      },
+      "Restrictions": {
+        "description": "List of restrictions.",
+        "items": {
+          "$ref": "#/components/schemas/MovementRestriction"
+        },
+        "type": "array"
+      },
+      "Rule": {
+        "properties": {
+          "action": {
+            "$ref": "#/components/schemas/Action"
+          },
+          "contents": {
+            "description": "List of contents.",
+            "items": {
+              "$ref": "#/components/schemas/Content"
+            },
+            "type": "array"
+          },
+          "description": {
+            "$ref": "#/components/schemas/Description"
+          },
+          "destinations": {
+            "description": "List of destinations.",
+            "items": {
+              "$ref": "#/components/schemas/Destination"
+            },
+            "type": "array"
+          },
+          "disabled": {
+            "description": "Is rule disabled",
+            "type": "boolean"
+          },
+          "id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "index": {
+            "description": "Index of the rule inside the rulebase",
+            "example": 1,
+            "type": "integer"
+          },
+          "name": {
+            "$ref": "#/components/schemas/Name"
+          },
+          "restrictions": {
+            "$ref": "#/components/schemas/Restrictions"
+          },
+          "sources": {
+            "description": "List of sources.",
+            "items": {
+              "$ref": "#/components/schemas/Source"
+            },
+            "type": "array"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ObjectStatus"
+          },
+          "trustProfile": {
+            "$ref": "#/components/schemas/TrustProfile"
+          }
+        },
+        "type": "object"
+      },
+      "Rulebase": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseRulebase"
+          },
+          {
+            "properties": {
+              "hasCleanupRule": {
+                "description": "Is this rulebase has a cleanup rule",
+                "type": "boolean"
+              },
+              "numOfCleanupRules": {
+                "type": "integer"
+              },
+              "restrictions": {
+                "$ref": "#/components/schemas/Restrictions"
+              },
+              "rules": {
+                "description": "List of rules in the rulebase.",
+                "items": {
+                  "$ref": "#/components/schemas/Rule"
+                },
+                "type": "array"
+              }
+            },
+            "type": "object"
+          }
+        ]
+      },
+      "RulebaseType": {
+        "enum": [
+          "TO_INTERNET",
+          "TO_INBOUND"
+        ],
+        "example": "TO_INTERNET",
+        "type": "string"
+      },
+      "Service": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/IService"
+          },
+          {
+            "properties": {
+              "icon": {
+                "type": "string"
+              },
+              "port": {
+                "type": "integer"
+              },
+              "protocolType": {
+                "$ref": "#/components/schemas/NetworkProtocolType"
+              }
+            },
+            "type": "object"
+          }
+        ]
+      },
+      "ServiceGroups": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseServiceGroups"
+          },
+          {
+            "properties": {
+              "comments": {
+                "type": "string"
+              },
+              "icon": {
+                "type": "string"
+              },
+              "services": {
+                "items": {
+                  "$ref": "#/components/schemas/Service"
+                },
+                "type": "array"
+              }
+            },
+            "type": "object"
+          }
+        ]
+      },
+      "SessionDescription": {
+        "type": "string"
+      },
+      "SessionDetails": {
+        "properties": {
+          "by": {
+            "$ref": "#/components/schemas/By"
+          },
+          "changes": {
+            "type": "integer"
+          },
+          "description": {
+            "$ref": "#/components/schemas/Description"
+          },
+          "endTime": {
+            "type": "number"
+          },
+          "id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "isOwned": {
+            "type": "boolean"
+          },
+          "lastUpdate": {
+            "type": "number"
+          },
+          "startTime": {
+            "type": "number"
+          },
+          "status": {
+            "$ref": "#/components/schemas/SessionState"
+          }
+        },
+        "type": "object"
+      },
+      "SessionState": {
+        "enum": [
+          "ACTIVE",
+          "IN_PROGRESS",
+          "DISCARDED",
+          "PUBLISHED",
+          "PUBLISHING",
+          "ERROR",
+          "PUBLISH_ERROR",
+          "INSTALL_ERROR",
+          null
+        ],
+        "example": "ACTIVE",
+        "type": "string"
+      },
+      "SessionStatus": {
+        "properties": {
+          "isActive": {
+            "type": "boolean"
+          },
+          "isOwned": {
+            "type": "boolean"
+          },
+          "numberOfChanges": {
+            "type": "integer"
+          },
+          "publishState": {
+            "$ref": "#/components/schemas/SessionState"
+          },
+          "sessionDescription": {
+            "$ref": "#/components/schemas/SessionDescription"
+          }
+        },
+        "type": "object"
+      },
+      "Site": {
+        "properties": {
+          "address": {
+            "$ref": "#/components/schemas/Address"
+          },
+          "description": {
+            "$ref": "#/components/schemas/SiteDescription"
+          },
+          "deviceType": {
+            "$ref": "#/components/schemas/DeviceType"
+          },
+          "id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "latitude": {
+            "$ref": "#/components/schemas/Latitude"
+          },
+          "location": {
+            "$ref": "#/components/schemas/Location"
+          },
+          "longitude": {
+            "$ref": "#/components/schemas/Longitude"
+          },
+          "name": {
+            "$ref": "#/components/schemas/SiteName"
+          },
+          "state": {
+            "$ref": "#/components/schemas/SiteState"
+          },
+          "subnets": {
+            "$ref": "#/components/schemas/Subnets"
+          },
+          "tunnelConnection": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/IPSecConnection"
+              },
+              {
+                "$ref": "#/components/schemas/GREConnection"
+              }
+            ],
+            "type": "object"
+          },
+          "tunnelParameters": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/GRETunnelParameters"
+              },
+              {
+                "$ref": "#/components/schemas/IPSecTunnelParameters"
+              }
+            ],
+            "type": "object"
+          },
+          "tunnelType": {
+            "$ref": "#/components/schemas/TunnelType"
+          },
+          "type": {
+            "$ref": "#/components/schemas/SiteType"
+          }
+        },
+        "type": "object"
+      },
+      "SiteDescription": {
+        "description": "Site description",
+        "example": "Branch Office in Northern California where marketing department resides.",
+        "type": "string"
+      },
+      "SiteName": {
+        "description": "Site Name",
+        "example": "Marketing Branch Office",
+        "type": "string"
+      },
+      "SiteState": {
+        "description": "A site can be at one of the following states:\n * `CREATING` - Site in creation process.\n * `DELETING` - Site is deletion process.\n * `UPDATING` - Site in update process.\n * `WAITING_FOR_TRAFFIC` - Site was created but no traffic was received yet.\n * `ACTIVE` - Site was created and traffic was recieved from the branch device.\n * `WARNING` - Traffic cannot pass through the site in some circumstances. Check field `events` for details.\n * `FAILURE` - Traffic cannot pass through the site. Check field `events` for details.",
+        "enum": [
+          "CREATING",
+          "DELETING",
+          "UPDATING",
+          "WAITING_FOR_TRAFFIC",
+          "WARNING",
+          "ACTIVE",
+          "FAILURE"
+        ],
+        "example": "ACTIVE",
+        "type": "string"
+      },
+      "SiteType": {
+        "description": "Site type:\n * `BRANCH_SITE` - A Branch office secured by Check Point",
+        "enum": [
+          "BRANCH_SITE",
+          "VWAN_SITE"
+        ],
+        "example": "BRANCH_SITE",
+        "type": "string"
+      },
+      "Source": {
+        "properties": {
+          "icon": {
+            "$ref": "#/components/schemas/Icon"
+          },
+          "id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "name": {
+            "$ref": "#/components/schemas/Name"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ObjectStatus"
+          },
+          "typeName": {
+            "$ref": "#/components/schemas/TypeName"
+          }
+        },
+        "type": "object"
+      },
+      "StaticIpConnection": {
+        "properties": {
+          "externalIps": {
+            "items": {
+              "$ref": "#/components/schemas/IPv4Address"
+            },
+            "type": "array"
+          },
+          "preSharedKey": {
+            "$ref": "#/components/schemas/PreSharedKey"
+          }
+        },
+        "type": "object"
+      },
+      "Subnet": {
+        "description": "Network address.",
+        "example": "12.32.4.0/24",
+        "type": "string"
+      },
+      "Subnets": {
+        "description": "List of internal network addresses behind the branch device.",
+        "items": {
+          "$ref": "#/components/schemas/Subnet"
+        },
+        "type": "array"
+      },
+      "ThreatPrevention": {
+        "properties": {
+          "exceptions": {
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/ThreatPreventionExceptionProtection"
+                }
+              ]
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "ThreatPreventionException": {
+        "properties": {
+          "by": {
+            "$ref": "#/components/schemas/By"
+          },
+          "comment": {
+            "$ref": "#/components/schemas/Comment"
+          },
+          "disableTime": {
+            "type": "number"
+          },
+          "disabled": {
+            "type": "boolean"
+          },
+          "id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "notificationTime": {
+            "type": "number"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ObjectStatus"
+          },
+          "time": {
+            "type": "number"
+          },
+          "typeName": {
+            "$ref": "#/components/schemas/TypeName"
+          }
+        },
+        "type": "object"
+      },
+      "ThreatPreventionExceptionProtection": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ThreatPreventionException"
+          },
+          {
+            "properties": {
+              "protections": {
+                "items": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ThreatPreventionProtection"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ThreatPreventionTechnologyProtection"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              "scope": {
+                "items": {
+                  "$ref": "#/components/schemas/IThreatPreventionScope"
+                },
+                "type": "array"
+              }
+            },
+            "type": "object"
+          }
+        ]
+      },
+      "ThreatPreventionProtection": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/IThreatPreventionProtection"
+          },
+          {
+            "type": "object"
+          }
+        ]
+      },
+      "ThreatPreventionTechnologyProtection": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/IThreatPreventionProtection"
+          },
+          {
+            "type": "object"
+          }
+        ]
+      },
+      "TrustProfile": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseTrustProfile"
+          },
+          {
+            "type": "object"
+          }
+        ]
+      },
+      "TunnelMSS": {
+        "example": 1360,
+        "type": "integer"
+      },
+      "TunnelMTU": {
+        "example": 1400,
+        "type": "integer"
+      },
+      "TunnelType": {
+        "description": "Tunnel type:\n * `IPSEC` - IPSec tunnel authenticated by pre-shared key\n * `GRE` - GRE tunnel",
+        "enum": [
+          "IPSEC",
+          "GRE"
+        ],
+        "example": "IPSEC",
+        "type": "string"
+      },
+      "TypeName": {
+        "description": "Type Name of the object",
+        "type": "string"
+      },
+      "URL": {
+        "description": "URL",
+        "type": "string"
+      },
+      "UnauthorizedErrorResponse": {
+        "description": "Invalid / missing authentication token was provided",
+        "properties": {
+          "message": {
+            "enum": [
+              "Authentication required"
+            ],
+            "type": "string"
+          },
+          "success": {
+            "enum": [
+              false
+            ],
+            "type": "boolean"
+          }
+        },
+        "type": "object"
+      },
+      "UpdateCustomDestinationInput": {
+        "properties": {
+          "addNetworks": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "addServices": {
+            "items": {
+              "$ref": "#/components/schemas/NotNullID"
+            },
+            "type": "array"
+          },
+          "description": {
+            "$ref": "#/components/schemas/Description"
+          },
+          "editNetworks": {
+            "items": {
+              "$ref": "#/components/schemas/UpdateCustomNetworkInput"
+            },
+            "type": "array"
+          },
+          "name": {
+            "$ref": "#/components/schemas/Name"
+          },
+          "removeNetworks": {
+            "items": {
+              "$ref": "#/components/schemas/NotNullID"
+            },
+            "type": "array"
+          },
+          "removeServices": {
+            "items": {
+              "$ref": "#/components/schemas/NotNullID"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "UpdateCustomNetworkInput": {
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/NotNullID"
+          },
+          "network": {
+            "$ref": "#/components/schemas/NotNullNetwork"
+          }
+        },
+        "type": "object"
+      },
+      "UpdateCustomServiceInput": {
+        "properties": {
+          "description": {
+            "$ref": "#/components/schemas/Description"
+          },
+          "name": {
+            "$ref": "#/components/schemas/Name"
+          },
+          "portRange": {
+            "$ref": "#/components/schemas/PortRange"
+          },
+          "protocol": {
+            "$ref": "#/components/schemas/NetworkProtocol"
+          },
+          "protocolType": {
+            "$ref": "#/components/schemas/NetworkProtocolType"
+          }
+        },
+        "type": "object"
+      },
+      "UpdateCustomSourceInput": {
+        "properties": {
+          "addNetworks": {
+            "items": {
+              "$ref": "#/components/schemas/NotNullNetwork"
+            },
+            "type": "array"
+          },
+          "description": {
+            "$ref": "#/components/schemas/Description"
+          },
+          "editNetworks": {
+            "items": {
+              "$ref": "#/components/schemas/UpdateCustomNetworkInput"
+            },
+            "type": "array"
+          },
+          "name": {
+            "$ref": "#/components/schemas/Name"
+          },
+          "removeNetworks": {
+            "items": {
+              "$ref": "#/components/schemas/NotNullID"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "UpdateCustomURLInput": {
+        "properties": {
+          "description": {
+            "$ref": "#/components/schemas/Description"
+          },
+          "isRegexp": {
+            "type": "boolean"
+          },
+          "name": {
+            "$ref": "#/components/schemas/Name"
+          },
+          "urls": {
+            "items": {
+              "$ref": "#/components/schemas/NotNullURL"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "UpdateDynamicIpConnection": {
+        "properties": {
+          "interfaceIdentifiers": {
+            "items": {
+              "$ref": "#/components/schemas/FQDN"
+            },
+            "type": "array"
+          },
+          "preSharedKey": {
+            "$ref": "#/components/schemas/PreSharedKey"
+          }
+        },
+        "required": [
+          "interfaceIdentifiers",
+          "preSharedKey"
+        ],
+        "type": "object"
+      },
+      "UpdateGREConnection": {
+        "properties": {
+          "externalIp": {
+            "$ref": "#/components/schemas/IPv4Address"
+          }
+        },
+        "required": [
+          "externalIp"
+        ],
+        "type": "object"
+      },
+      "UpdateHttpsInspectionInput": {
+        "properties": {
+          "addDestinationIds": {
+            "items": {
+              "$ref": "#/components/schemas/NotNullID"
+            },
+            "type": "array"
+          },
+          "addSources": {
+            "$ref": "#/components/schemas/HttpsInspectionSourcesInput"
+          },
+          "level": {
+            "$ref": "#/components/schemas/InspectionLevel"
+          },
+          "removeDestinationIds": {
+            "items": {
+              "$ref": "#/components/schemas/NotNullID"
+            },
+            "type": "array"
+          },
+          "removeSources": {
+            "$ref": "#/components/schemas/HttpsInspectionSourcesInput"
+          },
+          "sourceListExceptionMode": {
+            "$ref": "#/components/schemas/ExceptionMode"
+          }
+        },
+        "type": "object"
+      },
+      "UpdateIPSecConnection": {
+        "properties": {
+          "dynamicIpConnection": {
+            "$ref": "#/components/schemas/UpdateDynamicIpConnection"
+          },
+          "isDynamicIp": {
+            "description": "Set to `true` for using dynamic IP address, `false` for using static IP address.",
+            "type": "boolean"
+          },
+          "isMonitorWithDpd": {
+            "description": "Set to `true` for tunnel monitoring using dpd (dead peer detection), `false` for monitoring by traffic.",
+            "type": "boolean"
+          },
+          "staticIpConnection": {
+            "$ref": "#/components/schemas/UpdateStaticIpConnection"
+          }
+        },
+        "required": [
+          "isDynamicIp"
+        ],
+        "type": "object"
+      },
+      "UpdateIdentityAwarenessArgs": {
+        "properties": {
+          "identityAwarenessInput": {
+            "$ref": "#/components/schemas/IdentityAwarenessInput"
+          },
+          "installChanges": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "identityAwarenessInput"
+        ],
+        "type": "object"
+      },
+      "UpdatePolicyUserGroupInput": {
+        "properties": {
+          "description": {
+            "$ref": "#/components/schemas/Description"
+          },
+          "identityIdentifier": {
+            "$ref": "#/components/schemas/IdentityIdentifier"
+          },
+          "name": {
+            "$ref": "#/components/schemas/Name"
+          }
+        },
+        "type": "object"
+      },
+      "UpdatePolicyUserInput": {
+        "properties": {
+          "description": {
+            "$ref": "#/components/schemas/Description"
+          },
+          "identityIdentifier": {
+            "$ref": "#/components/schemas/IdentityIdentifier"
+          },
+          "name": {
+            "$ref": "#/components/schemas/Name"
+          }
+        },
+        "type": "object"
+      },
+      "UpdateRuleInput": {
+        "properties": {
+          "action": {
+            "$ref": "#/components/schemas/Action"
+          },
+          "addContentIds": {
+            "items": {
+              "$ref": "#/components/schemas/ID"
+            },
+            "type": "array"
+          },
+          "addDestinationIds": {
+            "items": {
+              "$ref": "#/components/schemas/ID"
+            },
+            "type": "array"
+          },
+          "addSourceIds": {
+            "items": {
+              "$ref": "#/components/schemas/ID"
+            },
+            "type": "array"
+          },
+          "description": {
+            "$ref": "#/components/schemas/Description"
+          },
+          "disabled": {
+            "description": "Is rule disabled",
+            "type": "boolean"
+          },
+          "moveAfterRuleId": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "name": {
+            "$ref": "#/components/schemas/Name"
+          },
+          "removeContentIds": {
+            "items": {
+              "$ref": "#/components/schemas/ID"
+            },
+            "type": "array"
+          },
+          "removeDestinationIds": {
+            "items": {
+              "$ref": "#/components/schemas/ID"
+            },
+            "type": "array"
+          },
+          "removeSourceIds": {
+            "items": {
+              "$ref": "#/components/schemas/ID"
+            },
+            "type": "array"
+          },
+          "trustProfileId": {
+            "$ref": "#/components/schemas/ID"
+          }
+        },
+        "type": "object"
+      },
+      "UpdateSiteInput": {
+        "properties": {
+          "address": {
+            "$ref": "#/components/schemas/Address"
+          },
+          "description": {
+            "$ref": "#/components/schemas/SiteDescription"
+          },
+          "deviceType": {
+            "$ref": "#/components/schemas/DeviceType"
+          },
+          "greConnection": {
+            "$ref": "#/components/schemas/UpdateGREConnection"
+          },
+          "ipsecConnection": {
+            "$ref": "#/components/schemas/UpdateIPSecConnection"
+          },
+          "latitude": {
+            "$ref": "#/components/schemas/Latitude"
+          },
+          "longitude": {
+            "$ref": "#/components/schemas/Longitude"
+          },
+          "name": {
+            "$ref": "#/components/schemas/SiteName"
+          },
+          "subnets": {
+            "$ref": "#/components/schemas/Subnets"
+          }
+        },
+        "type": "object"
+      },
+      "UpdateStaticIpConnection": {
+        "properties": {
+          "externalIps": {
+            "items": {
+              "$ref": "#/components/schemas/IPv4Address"
+            },
+            "type": "array"
+          },
+          "preSharedKey": {
+            "$ref": "#/components/schemas/PreSharedKey"
+          }
+        },
+        "required": [
+          "externalIps",
+          "preSharedKey"
+        ],
+        "type": "object"
+      },
+      "UpdateThreatPreventionExceptionProtectionInput": {
+        "properties": {
+          "addProtections": {
+            "items": {
+              "$ref": "#/components/schemas/NotNullID"
+            },
+            "type": "array"
+          },
+          "addScope": {
+            "items": {
+              "$ref": "#/components/schemas/NotNullID"
+            },
+            "type": "array"
+          },
+          "comment": {
+            "$ref": "#/components/schemas/Comment"
+          },
+          "disableTime": {
+            "type": "number"
+          },
+          "notificationTime": {
+            "type": "number"
+          },
+          "removeProtections": {
+            "items": {
+              "$ref": "#/components/schemas/NotNullID"
+            },
+            "type": "array"
+          },
+          "removeScope": {
+            "items": {
+              "$ref": "#/components/schemas/NotNullID"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "httpsStatus": {
+        "enum": [
+          "LEVEL_LOCK",
+          "LEVEL_EDIT",
+          "SOURCE_MODE_LOCK",
+          "SOURCE_MODE_EDIT",
+          "DESTINATIONS_BYPASS_LOCK",
+          "DESTINATIONS_BYPASS_EDIT",
+          "SOURCES_BYPASS_LOCK",
+          "SOURCES_BYPASS_EDIT",
+          "SOURCES_INSPECT_LOCK",
+          "SOURCES_INSPECT_EDIT",
+          null
+        ],
+        "example": "LEVEL_LOCK",
+        "type": "string"
+      }
+    },
+    "securitySchemes": {
+      "apiKey": {
+        "bearerFormat": "JWT",
+        "type": "apiKey"
+      }
+    }
+  },
+  "info": {
+    "contact": {
+      "email": "mirza.baig@crowdstrike.com"
+    },
+    "description": "Versions: [v1](https://app.swaggerhub.com/apis-docs/Check-Point/cloudguard-connect-api/1.0.0/) | [v1.1](https://app.swaggerhub.com/apis-docs/Check-Point/cloudguard-connect-api/1.1.0/) | [v1.2](https://app.swaggerhub.com/apis-docs/Check-Point/cloudguard-connect-api/1.2.0/) | [v1.3](https://app.swaggerhub.com/apis-docs/Check-Point/harmony-connect-api/1.3.0/) | [v1.4](https://app.swaggerhub.com/apis-docs/Check-Point/harmony-connect-api/1.4.0/) | [v2](https://app.swaggerhub.com/apis-docs/Check-Point/harmony-connect-api/2/) | v3\n# Introduction\nCheck Point Harmony Connect, the only prevention-focused Secure Access Service Edge (SASE) solution, is redefining SASE by making it easy to access corporate applications, SaaS and the internet for any user or branch, from any device, without compromising on security.\n\nBuilt to prevent the most evasive cyber attacks, Harmony Connect is a 100% cloud service that unifies multiple network security products, deploys within minutes and applies Zero Trust access policies with a breezy user experience for all.\n\nThe rich API set supports managing Internet Access and Network Access policies, along with managing sites. A Site can be either a branch office or a data center.\n\n**Important:** Before making any API call, please refer to the **Authentication** section.\n\nFor Application Access (previously \"Odo\") API, [click here](https://app.swaggerhub.com/apis-docs/Check-Point/Odo-API)\n\nRead More:\n* [Harmony Connect product page](https://www.checkpoint.com/harmony/connect-sase/)\n* [See Check Point's additional API packages](https://sc1.checkpoint.com/documents/latest/api_reference/index.html)\n* [Discuss on CheckMates](https://community.checkpoint.com/t5/Connect/bd-p/sase)\n\nDownloads:\n* [Postman Collection](http://sc1.checkpoint.com/documents/HarmonyConnect/HarmonyConnect-API-v3-postman.json)",
+    "title": "CheckPoint Harmony",
+    "version": ""
+  },
+  "openapi": "3.0.3",
+  "paths": {
+    "/IDPUserGroups": {
+      "get": {
+        "description": "Get the list of IDP User Groups defined at Harmony Connect.",
+        "operationId": "getIDPUserGroups",
+        "parameters": [
+          {
+            "description": "When using multi IDP - need to pass IDP ID",
+            "in": "query",
+            "name": "idpId",
+            "schema": {
+              "$ref": "#/components/schemas/ID"
+            }
+          },
+          {
+            "description": "Max objects to display",
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "default": 20,
+              "description": "Max objects to display",
+              "maximum": 100,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Filter only the objects which contain the matchSearch string",
+            "in": "query",
+            "name": "matchSearch",
+            "schema": {
+              "$ref": "#/components/schemas/MatchSearch"
+            }
+          },
+          {
+            "description": "Objects from offset",
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "default": 0,
+              "description": "Objects from offset",
+              "maximum": 1000000,
+              "minimum": 0,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/PaginationResponseBase"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "items": {
+                            "$ref": "#/components/schemas/BaseIDPUserGroup"
+                          },
+                          "type": "array"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/IDPUserGroups/{id}": {
+      "get": {
+        "description": "Get a IDP User Group with a specific ID.",
+        "operationId": "getIDPUserGroupById",
+        "parameters": [
+          {
+            "description": "ID.",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ID"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/IDPUserGroup"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/IDPUsers": {
+      "get": {
+        "description": "Get the list of IDP Users defined at Harmony Connect.",
+        "operationId": "getIDPUsers",
+        "parameters": [
+          {
+            "description": "When using multi IDP - need to pass IDP ID",
+            "in": "query",
+            "name": "idpId",
+            "schema": {
+              "$ref": "#/components/schemas/ID"
+            }
+          },
+          {
+            "description": "Max objects to display",
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "default": 20,
+              "description": "Max objects to display",
+              "maximum": 100,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Filter only the objects which contain the matchSearch string",
+            "in": "query",
+            "name": "matchSearch",
+            "schema": {
+              "$ref": "#/components/schemas/MatchSearch"
+            }
+          },
+          {
+            "description": "Objects from offset",
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "default": 0,
+              "description": "Objects from offset",
+              "maximum": 1000000,
+              "minimum": 0,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/PaginationResponseBase"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "items": {
+                            "$ref": "#/components/schemas/BaseIDPUser"
+                          },
+                          "type": "array"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/IDPUsers/{id}": {
+      "get": {
+        "description": "Get a IDP User with a specific ID.",
+        "operationId": "getIDPUserById",
+        "parameters": [
+          {
+            "description": "ID.",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ID"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/IDPUser"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/URLLists": {
+      "get": {
+        "description": "Get all URL Lists defined at Harmony Connect.",
+        "operationId": "getCustomURLs",
+        "parameters": [
+          {
+            "description": "Max objects to display",
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "default": 20,
+              "description": "Max objects to display",
+              "maximum": 100,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Filter only the objects which contain the matchSearch string",
+            "in": "query",
+            "name": "matchSearch",
+            "schema": {
+              "$ref": "#/components/schemas/MatchSearch"
+            }
+          },
+          {
+            "description": "Objects from offset",
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "default": 0,
+              "description": "Objects from offset",
+              "maximum": 1000000,
+              "minimum": 0,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/PaginationResponseBase"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "items": {
+                            "$ref": "#/components/schemas/BaseCustomURL"
+                          },
+                          "type": "array"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Add URL List",
+        "operationId": "addCustomURL",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewCustomURLInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/CustomURL"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/URLLists/{id}": {
+      "get": {
+        "description": "Get a URL List with a specific ID.",
+        "operationId": "getCustomURLById",
+        "parameters": [
+          {
+            "description": "ID.",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ID"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/CustomURL"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "description": "Update a URL List.",
+        "operationId": "updateCustomURL",
+        "parameters": [
+          {
+            "description": "ID.",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ID"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCustomURLInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": null
+      }
+    },
+    "/applicationCategories": {
+      "get": {
+        "description": "Get the list of Application Categories defined at Harmony Connect.",
+        "operationId": "getApplicationCategories",
+        "parameters": [
+          {
+            "description": "Max objects to display",
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "default": 20,
+              "description": "Max objects to display",
+              "maximum": 100,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Filter only the objects which contain the matchSearch string",
+            "in": "query",
+            "name": "matchSearch",
+            "schema": {
+              "$ref": "#/components/schemas/MatchSearch"
+            }
+          },
+          {
+            "description": "Objects from offset",
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "default": 0,
+              "description": "Objects from offset",
+              "maximum": 1000000,
+              "minimum": 0,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/PaginationResponseBase"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "items": {
+                            "$ref": "#/components/schemas/BaseApplicationCategory"
+                          },
+                          "type": "array"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/applicationCategories/{id}": {
+      "get": {
+        "description": "Get an Application Category with a specific ID.",
+        "operationId": "getApplicationCategoryById",
+        "parameters": [
+          {
+            "description": "ID.",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ID"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/ApplicationCategory"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/applications": {
+      "get": {
+        "description": "Get the list of Applications defined at Harmony Connect.",
+        "operationId": "getApplications",
+        "parameters": [
+          {
+            "description": "Max objects to display",
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "default": 20,
+              "description": "Max objects to display",
+              "maximum": 100,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Filter only the objects which contain the matchSearch string",
+            "in": "query",
+            "name": "matchSearch",
+            "schema": {
+              "$ref": "#/components/schemas/MatchSearch"
+            }
+          },
+          {
+            "description": "Objects from offset",
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "default": 0,
+              "description": "Objects from offset",
+              "maximum": 1000000,
+              "minimum": 0,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/PaginationResponseBase"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "items": {
+                            "$ref": "#/components/schemas/BaseApplication"
+                          },
+                          "type": "array"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/applications/{id}": {
+      "get": {
+        "description": "Get an Application with a specific ID.",
+        "operationId": "getApplicationById",
+        "parameters": [
+          {
+            "description": "ID.",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ID"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Application"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/external": {
+      "post": {
+        "description": "Before making any API call, the user needs to authenticate using an API Key.\n\nAn API Key consists of Client ID and Secret Key.\n\nUsers can create API Keys by browsing to Infinity Portal at **GLOBAL SETTINGS \u003e API Keys**.\n\nWhen creating an API Key, make sure that **module** is set to **Harmony Connect**.\n\n[Read about API Keys at Infinity Portal Admin Guide](https://sc1.checkpoint.com/documents/Infinity_Portal/WebAdminGuides/EN/Infinity-Portal-Admin-Guide/Content/Topics-Infinity-Portal-Admin-Guide/Global-Settings.htm?Highlight=api).\n\nA successful authentication results with a temporary authentication token.\n\nThis token will expire 30 minutes from its generation time, for security purposes. Therefore, for web applications it is recommended to re-authenticate prior to getting this temporary authentication token expired.\n\nExample of authenticating with an API Key's Client ID and Secret Key (default URL):\n\n    \u003ecurl -d '{\"clientId\":\"$CLIENT_ID\",\"accessKey\":\"$SECRET_KEY\"}' -H \"Content-Type: application/json\" -X POST https://cloudinfra-gw.portal.checkpoint.com/auth/external\n\nExample of authenticating with an API Key's Client ID and Secret Key (For USA Tenants):\n\n    \u003ecurl -d '{\"clientId\":\"$CLIENT_ID\",\"accessKey\":\"$SECRET_KEY\"}' -H \"Content-Type: application/json\" -X POST https://cloudinfra-gw-us.portal.checkpoint.com/auth/external\n\nThe temporary authentication token retrieved at the response of this call, should be then used as  **Authorization: Bearer [token]** header at each request.\n\nExample of adding the authorization bearer token \"abc\" to an API call (default URL):\n\n\n    \u003ecurl -H \"Authorization: Bearer abc\" https://cloudinfra-gw.portal.checkpoint.com/app/harmonyconnect/latest/locations\n\nExample of adding the authorization bearer token \"abc\" to an API call (For USA Tenants):\n\n\n    \u003ecurl -H \"Authorization: Bearer abc\" https://cloudinfra-gw-us.portal.checkpoint.com/app/harmonyconnect/latest/locations",
+        "operationId": "getAuthToken",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetAuthTokenInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "properties": {
+                        "token": {
+                          "$ref": "#/components/schemas/AuthToken"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "success": {
+                      "enum": [
+                        true
+                      ],
+                      "type": "boolean"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/customObjects/{id}": {
+      "delete": {
+        "description": "Delete a Custom Object by its ID.",
+        "operationId": "removeCustomObject",
+        "parameters": [
+          {
+            "description": "ID.",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ID"
+            }
+          }
+        ],
+        "responses": null
+      }
+    },
+    "/customServices": {
+      "get": {
+        "description": "Get the list of Custom Services defined at Harmony Connect.",
+        "operationId": "getCustomServices",
+        "parameters": [
+          {
+            "description": "Max objects to display",
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "default": 20,
+              "description": "Max objects to display",
+              "maximum": 100,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Filter only the objects which contain the matchSearch string",
+            "in": "query",
+            "name": "matchSearch",
+            "schema": {
+              "$ref": "#/components/schemas/MatchSearch"
+            }
+          },
+          {
+            "description": "Objects from offset",
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "default": 0,
+              "description": "Objects from offset",
+              "maximum": 1000000,
+              "minimum": 0,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/PaginationResponseBase"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "items": {
+                            "$ref": "#/components/schemas/BaseCustomService"
+                          },
+                          "type": "array"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Add Custom Service.",
+        "operationId": "addCustomService",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewCustomServiceInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/CustomService"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/customServices/{id}": {
+      "get": {
+        "description": "Get a Custom Service with a specific ID.",
+        "operationId": "getCustomServiceById",
+        "parameters": [
+          {
+            "description": "ID.",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ID"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/CustomService"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "description": "Update a Custom Service.",
+        "operationId": "updateCustomService",
+        "parameters": [
+          {
+            "description": "ID.",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ID"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCustomServiceInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": null
+      }
+    },
+    "/dataContents": {
+      "get": {
+        "description": "Get the list of Data Contents defined at Harmony Connect.",
+        "operationId": "getDataContents",
+        "parameters": [
+          {
+            "description": "Max objects to display",
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "default": 20,
+              "description": "Max objects to display",
+              "maximum": 100,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Filter only the objects which contain the matchSearch string",
+            "in": "query",
+            "name": "matchSearch",
+            "schema": {
+              "$ref": "#/components/schemas/MatchSearch"
+            }
+          },
+          {
+            "description": "Objects from offset",
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "default": 0,
+              "description": "Objects from offset",
+              "maximum": 1000000,
+              "minimum": 0,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/PaginationResponseBase"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "items": {
+                            "$ref": "#/components/schemas/BaseDataContent"
+                          },
+                          "type": "array"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/dataContents/{id}": {
+      "get": {
+        "description": "Get an Data Content with a specific ID.",
+        "operationId": "getDataContentById",
+        "parameters": [
+          {
+            "description": "ID.",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ID"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/DataContent"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/discardChanges": {
+      "post": {
+        "description": "Discard all the changes of the current session.",
+        "operationId": "discardChanges",
+        "parameters": [
+          {
+            "description": "ID.",
+            "in": "query",
+            "name": "id",
+            "schema": {
+              "$ref": "#/components/schemas/ID"
+            }
+          }
+        ],
+        "responses": null
+      }
+    },
+    "/fileContents": {
+      "get": {
+        "description": "Get the list of File Contents defined at Harmony Connect.",
+        "operationId": "getFileContents",
+        "parameters": [
+          {
+            "description": "Max objects to display",
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "default": 20,
+              "description": "Max objects to display",
+              "maximum": 100,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Filter only the objects which contain the matchSearch string",
+            "in": "query",
+            "name": "matchSearch",
+            "schema": {
+              "$ref": "#/components/schemas/MatchSearch"
+            }
+          },
+          {
+            "description": "Objects from offset",
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "default": 0,
+              "description": "Objects from offset",
+              "maximum": 1000000,
+              "minimum": 0,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/PaginationResponseBase"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "items": {
+                            "$ref": "#/components/schemas/BaseFileContent"
+                          },
+                          "type": "array"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/fileContents/{id}": {
+      "get": {
+        "description": "Get a File Content with a specific ID.",
+        "operationId": "getFileContentById",
+        "parameters": [
+          {
+            "description": "ID.",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ID"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/FileContent"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/httpsInspection": {
+      "get": {
+        "description": "Get Https Inspection",
+        "operationId": "getHttpsInspection",
+        "responses": {
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/HttpsInspection"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "description": "Update Https Inspection.",
+        "operationId": "updateHttpsInspection",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateHttpsInspectionInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": null
+      }
+    },
+    "/identityAwareness": {
+      "get": {
+        "description": "Get Identity Awareness",
+        "operationId": "getIdentityAwareness",
+        "responses": {
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/IdentityAwareness"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "description": "Update Identity Awareness.",
+        "operationId": "updateIdentityAwareness",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateIdentityAwarenessArgs"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": null
+      }
+    },
+    "/installPolicy": {
+      "post": {
+        "description": "Install the policy.",
+        "operationId": "installPolicy",
+        "responses": null
+      }
+    },
+    "/locations": {
+      "get": {
+        "operationId": "getLocations",
+        "responses": {
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "items": {
+                        "$ref": "#/components/schemas/Location"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/locations/{locationId}": {
+      "get": {
+        "operationId": "getLocationById",
+        "parameters": [
+          {
+            "description": "ID of a location of Check Point's cloud service as pre-defined by Check Point.",
+            "in": "path",
+            "name": "locationId",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ID"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Location"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/networkLists": {
+      "get": {
+        "description": "Get all Network Lists defined at Harmony Connect.",
+        "operationId": "getCustomSources",
+        "parameters": [
+          {
+            "description": "Max objects to display",
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "default": 20,
+              "description": "Max objects to display",
+              "maximum": 100,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Filter only the objects which contain the matchSearch string",
+            "in": "query",
+            "name": "matchSearch",
+            "schema": {
+              "$ref": "#/components/schemas/MatchSearch"
+            }
+          },
+          {
+            "description": "Objects from offset",
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "default": 0,
+              "description": "Objects from offset",
+              "maximum": 1000000,
+              "minimum": 0,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/PaginationResponseBase"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "items": {
+                            "$ref": "#/components/schemas/BaseCustomSource"
+                          },
+                          "type": "array"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Add Network List.",
+        "operationId": "addCustomSource",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewCustomSourceInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/CustomSource"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/networkLists/{id}": {
+      "get": {
+        "description": "Get a Network List with a specific ID.",
+        "operationId": "getCustomSourceById",
+        "parameters": [
+          {
+            "description": "ID.",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ID"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/CustomSource"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "description": "Update Network List.",
+        "operationId": "updateCustomSource",
+        "parameters": [
+          {
+            "description": "ID.",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ID"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCustomSourceInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": null
+      }
+    },
+    "/policyStatus": {
+      "get": {
+        "description": "Get Policy Status",
+        "operationId": "getPolicyStatus",
+        "responses": {
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/PolicyStatus"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/policyUserGroups": {
+      "get": {
+        "description": "Get the list of Policy User Groups defined at Harmony Connect.",
+        "operationId": "getPolicyUserGroups",
+        "parameters": [
+          {
+            "description": "When using multi IDP - need to pass IDP ID",
+            "in": "query",
+            "name": "idpId",
+            "schema": {
+              "$ref": "#/components/schemas/ID"
+            }
+          },
+          {
+            "description": "Max objects to display",
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "default": 20,
+              "description": "Max objects to display",
+              "maximum": 100,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Filter only the objects which contain the matchSearch string",
+            "in": "query",
+            "name": "matchSearch",
+            "schema": {
+              "$ref": "#/components/schemas/MatchSearch"
+            }
+          },
+          {
+            "description": "Objects from offset",
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "default": 0,
+              "description": "Objects from offset",
+              "maximum": 1000000,
+              "minimum": 0,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/PaginationResponseBase"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "items": {
+                            "$ref": "#/components/schemas/BasePolicyUserGroup"
+                          },
+                          "type": "array"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Add a Policy User Group",
+        "operationId": "addPolicyUserGroup",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewPolicyUserGroupInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/PolicyUserGroup"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/policyUserGroups/{id}": {
+      "get": {
+        "description": "Get Policy User Group with a specific ID.",
+        "operationId": "getPolicyUserGroup",
+        "parameters": [
+          {
+            "description": "ID.",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ID"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/PolicyUserGroup"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "description": "Update a Policy User Group.",
+        "operationId": "updatePolicyUserGroup",
+        "parameters": [
+          {
+            "description": "ID.",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ID"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePolicyUserGroupInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": null
+      }
+    },
+    "/policyUsers": {
+      "get": {
+        "description": "Get the list of Local (non IPD) Policy Users defined at Harmony Connect.",
+        "operationId": "getPolicyUsers",
+        "parameters": [
+          {
+            "description": "When using multi IDP - need to pass IDP ID",
+            "in": "query",
+            "name": "idpId",
+            "schema": {
+              "$ref": "#/components/schemas/ID"
+            }
+          },
+          {
+            "description": "Max objects to display",
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "default": 20,
+              "description": "Max objects to display",
+              "maximum": 100,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Filter only the objects which contain the matchSearch string",
+            "in": "query",
+            "name": "matchSearch",
+            "schema": {
+              "$ref": "#/components/schemas/MatchSearch"
+            }
+          },
+          {
+            "description": "Objects from offset",
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "default": 0,
+              "description": "Objects from offset",
+              "maximum": 1000000,
+              "minimum": 0,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/PaginationResponseBase"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "items": {
+                            "$ref": "#/components/schemas/BasePolicyUser"
+                          },
+                          "type": "array"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Add a Policy User",
+        "operationId": "addPolicyUser",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewPolicyUserInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/PolicyUser"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/policyUsers/{id}": {
+      "get": {
+        "description": "Get Policy User with a specific ID.",
+        "operationId": "getPolicyUser",
+        "parameters": [
+          {
+            "description": "ID.",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ID"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/PolicyUser"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "description": "Update a Policy User.",
+        "operationId": "updatePolicyUser",
+        "parameters": [
+          {
+            "description": "ID.",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ID"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePolicyUserInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": null
+      }
+    },
+    "/predefinedDestinations": {
+      "get": {
+        "description": "Get the list of Predefined Destinations defined at Harmony Connect.",
+        "operationId": "getPredefinedDestinations",
+        "parameters": [
+          {
+            "description": "Max objects to display",
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "default": 20,
+              "description": "Max objects to display",
+              "maximum": 100,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Filter only the objects which contain the matchSearch string",
+            "in": "query",
+            "name": "matchSearch",
+            "schema": {
+              "$ref": "#/components/schemas/MatchSearch"
+            }
+          },
+          {
+            "description": "Objects from offset",
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "default": 0,
+              "description": "Objects from offset",
+              "maximum": 1000000,
+              "minimum": 0,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/PaginationResponseBase"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "items": {
+                            "$ref": "#/components/schemas/PredefinedPolicyObject"
+                          },
+                          "type": "array"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/predefinedObject/{id}": {
+      "get": {
+        "description": "Get Predefined Object",
+        "operationId": "getPredefinedObject",
+        "parameters": [
+          {
+            "description": "ID.",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ID"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/PredefinedPolicyObject"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/predefinedSources": {
+      "get": {
+        "description": "Get the list of Predefined Sources defined at Harmony Connect.",
+        "operationId": "getPredefinedSources",
+        "parameters": [
+          {
+            "description": "Max objects to display",
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "default": 20,
+              "description": "Max objects to display",
+              "maximum": 100,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Filter only the objects which contain the matchSearch string",
+            "in": "query",
+            "name": "matchSearch",
+            "schema": {
+              "$ref": "#/components/schemas/MatchSearch"
+            }
+          },
+          {
+            "description": "Objects from offset",
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "default": 0,
+              "description": "Objects from offset",
+              "maximum": 1000000,
+              "minimum": 0,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/PaginationResponseBase"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "items": {
+                            "$ref": "#/components/schemas/PredefinedPolicyObject"
+                          },
+                          "type": "array"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/publishChanges": {
+      "post": {
+        "description": "Publish all the changes of the current session.",
+        "operationId": "publishChanges",
+        "responses": {
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/PublishChangesResult"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/publishChangesAndInstallPolicy": {
+      "post": {
+        "description": "Publish all the changes of the current session and install the policy.",
+        "operationId": "publishChangesAndInstallPolicy",
+        "responses": {
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/PublishChangesResult"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rule": {
+      "post": {
+        "description": "Add a Rule",
+        "operationId": "addRule",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddRuleArgs"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Rule"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rule/{id}": {
+      "delete": {
+        "description": "Delete a Rule by its ID.",
+        "operationId": "removeRule",
+        "parameters": [
+          {
+            "description": "ID.",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ID"
+            }
+          }
+        ],
+        "responses": null
+      },
+      "patch": {
+        "description": "Update a Rule.",
+        "operationId": "updateRule",
+        "parameters": [
+          {
+            "description": "ID.",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ID"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateRuleInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": null
+      }
+    },
+    "/rulebases": {
+      "get": {
+        "description": "Get the list of Rulebases defined at Harmony Connect.",
+        "operationId": "getRulebases",
+        "parameters": [
+          {
+            "description": "Max objects to display",
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "default": 20,
+              "description": "Max objects to display",
+              "maximum": 100,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Objects from offset",
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "default": 0,
+              "description": "Objects from offset",
+              "maximum": 1000000,
+              "minimum": 0,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "items": {
+                        "$ref": "#/components/schemas/BaseRulebase"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rulebases/{id}": {
+      "get": {
+        "description": "Get a rulebase with a specific ID.",
+        "operationId": "getRulebaseById",
+        "parameters": [
+          {
+            "description": "ID.",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ID"
+            }
+          },
+          {
+            "description": "Max objects to display",
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "default": 20,
+              "description": "Max objects to display",
+              "maximum": 100,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Filter only the objects which start with the matchSearch string",
+            "in": "query",
+            "name": "matchSearch",
+            "schema": {
+              "$ref": "#/components/schemas/MatchSearch"
+            }
+          },
+          {
+            "description": "Objects from offset",
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "default": 0,
+              "description": "Objects from offset",
+              "maximum": 1000000,
+              "minimum": 0,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Rulebase"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/services": {
+      "get": {
+        "description": "Get the list of Services defined at Harmony Connect.",
+        "operationId": "getServices",
+        "parameters": [
+          {
+            "description": "Max objects to display",
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "default": 20,
+              "description": "Max objects to display",
+              "maximum": 100,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Filter only the objects which contain the matchSearch string",
+            "in": "query",
+            "name": "matchSearch",
+            "schema": {
+              "$ref": "#/components/schemas/MatchSearch"
+            }
+          },
+          {
+            "description": "Objects from offset",
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "default": 0,
+              "description": "Objects from offset",
+              "maximum": 1000000,
+              "minimum": 0,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/PaginationResponseBase"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "items": {
+                            "$ref": "#/components/schemas/Service"
+                          },
+                          "type": "array"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/servicesAndNetworks": {
+      "get": {
+        "description": "Get all Services And Networks defined at Harmony Connect.",
+        "operationId": "getCustomDestinations",
+        "parameters": [
+          {
+            "description": "Max objects to display",
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "default": 20,
+              "description": "Max objects to display",
+              "maximum": 100,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Filter only the objects which contain the matchSearch string",
+            "in": "query",
+            "name": "matchSearch",
+            "schema": {
+              "$ref": "#/components/schemas/MatchSearch"
+            }
+          },
+          {
+            "description": "Objects from offset",
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "default": 0,
+              "description": "Objects from offset",
+              "maximum": 1000000,
+              "minimum": 0,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/PaginationResponseBase"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "items": {
+                            "$ref": "#/components/schemas/BaseCustomDestination"
+                          },
+                          "type": "array"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Add Services And Networks.",
+        "operationId": "addCustomDestination",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewCustomDestinationInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/CustomDestination"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/servicesAndNetworks/{id}": {
+      "get": {
+        "description": "Get Services And Networks with a specific ID.",
+        "operationId": "getCustomDestinationById",
+        "parameters": [
+          {
+            "description": "ID.",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ID"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/CustomDestination"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "description": "Update Services And Networks.",
+        "operationId": "updateCustomDestination",
+        "parameters": [
+          {
+            "description": "ID.",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ID"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCustomDestinationInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": null
+      }
+    },
+    "/session": {
+      "get": {
+        "description": "Get session",
+        "operationId": "getSession",
+        "parameters": [
+          {
+            "description": "ID.",
+            "in": "query",
+            "name": "id",
+            "schema": {
+              "$ref": "#/components/schemas/ID"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/SessionDetails"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sessionStatus": {
+      "get": {
+        "description": "Get Session Status",
+        "operationId": "getSessionStatus",
+        "responses": {
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/SessionStatus"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sites": {
+      "get": {
+        "description": "Get the list of sites defined at Harmony Connect.\n\nA site represents a branch office.",
+        "operationId": "getSites",
+        "parameters": [
+          {
+            "description": "Max objects to display",
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "default": 20,
+              "description": "Max objects to display",
+              "maximum": 100,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Objects from offset",
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "default": 0,
+              "description": "Objects from offset",
+              "maximum": 1000000,
+              "minimum": 0,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/PaginationResponseBase"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "items": {
+                            "$ref": "#/components/schemas/Site"
+                          },
+                          "type": "array"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Add new site to Harmony Connect.\n\nA site represents a branch office.\n\n\u003ch3\u003eLocation of the cloud service for this site\u003c/h3\u003e\n\nA site's location represents the location of Check Point's cloud service that this site will connect to, to provide secure Internet access.\nSee `/locations` to get a list of locations. In case locationId is not provided, Check Point will use the site's physical location and select the most fitting location of the cloud service automatically.\n\nYou can set the site's physical location using the *latitude and longitude* (numbers) parameters or using the *address* (string) parameter.\n\nTherefore, either *locationId* or *latitude and longitude* or *address* must be provided.",
+        "operationId": "addSite",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddSiteInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Site"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sites/{siteId}": {
+      "delete": {
+        "description": "Delete a site by its ID.\n\nA site represents a branch office.",
+        "operationId": "deleteSite",
+        "parameters": [
+          {
+            "description": "ID of a site. For the list of all sites and their ID's, see the API for /sites",
+            "in": "path",
+            "name": "siteId",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ID"
+            }
+          }
+        ],
+        "responses": null
+      },
+      "get": {
+        "description": "Get a site defined at Harmony Connect with a specific ID.\n\nA site represents a branch office.",
+        "operationId": "getSiteById",
+        "parameters": [
+          {
+            "description": "ID of a site. For the list of all sites and their ID's, see the API for /sites",
+            "in": "path",
+            "name": "siteId",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ID"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Site"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "description": "\nUpdates a site based on its ID.\n\n\u003ch3\u003eLocation of the cloud service for this site\u003c/h3\u003e\n\nA site's location represents the location of Check Point's cloud service that this site will connect to, to provide secure Internet access.\nSee `/locations` to get a list of locations. In case locationId is not provided, Check Point will use the site's physical location and select the most fitting location of the cloud service automatically.\n\nYou can set the site's physical location using the *latitude and longitude* (numbers) parameters or using the *address* (string) parameter.\n\nTherefore, either *locationId* or *latitude and longitude* or *address* must be provided.\n\n The following parameters cannot be edited: Location, tunnel type, name. In case you would like to modify those parameters, you would need to delete and re-create the site.",
+        "operationId": "updateSite",
+        "parameters": [
+          {
+            "description": "ID of a site. For the list of all sites and their ID's, see the API for /sites",
+            "in": "path",
+            "name": "siteId",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ID"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSiteInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Site"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/threatPrevention": {
+      "get": {
+        "description": "Get Threat Prevention",
+        "operationId": "getThreatPrevention",
+        "responses": {
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/ThreatPrevention"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/threatPreventionException/{id}": {
+      "get": {
+        "description": "Get Threat Prevention Exception",
+        "operationId": "getThreatPreventionException",
+        "parameters": [
+          {
+            "description": "ID.",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ID"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "data": [
+                      {
+                        "by": "string",
+                        "comment": "string",
+                        "disableTime": 0,
+                        "disabled": true,
+                        "id": "11111111-1111-1111-1111-111111111111",
+                        "notificationTime": 0,
+                        "protections": [
+                          {
+                            "id": "11111111-1111-1111-1111-111111111111",
+                            "name": "Object Name",
+                            "typeName": "string"
+                          },
+                          {
+                            "id": "11111111-1111-1111-1111-111111111111",
+                            "name": "Object Name",
+                            "typeName": "string"
+                          }
+                        ],
+                        "scope": [
+                          {
+                            "icon": "Object Icon",
+                            "id": "11111111-1111-1111-1111-111111111111",
+                            "name": "Object Name",
+                            "status": "NORMAL",
+                            "typeName": "string"
+                          }
+                        ],
+                        "status": "NORMAL",
+                        "time": 0,
+                        "typeName": "string"
+                      }
+                    ]
+                  },
+                  "properties": {
+                    "data": {
+                      "oneOf": [
+                        {
+                          "$ref": "#/components/schemas/ThreatPreventionExceptionProtection"
+                        }
+                      ]
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/threatPreventionExceptionProtection": {
+      "post": {
+        "description": "Add a Threat Prevention Exception Protection",
+        "operationId": "addThreatPreventionExceptionProtection",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewThreatPreventionExceptionProtectionInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/ThreatPreventionExceptionProtection"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/threatPreventionExceptionProtection/{id}": {
+      "delete": {
+        "description": "Delete a Threat Prevention Exception Protection by its ID.",
+        "operationId": "removeThreatPreventionExceptionProtection",
+        "parameters": [
+          {
+            "description": "ID.",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ID"
+            }
+          }
+        ],
+        "responses": null
+      },
+      "patch": {
+        "description": "Update a Threat Prevention Exception Protection.",
+        "operationId": "updateThreatPreventionExceptionProtection",
+        "parameters": [
+          {
+            "description": "ID.",
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ID"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateThreatPreventionExceptionProtectionInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": null
+      }
+    },
+    "/threatPreventionProtections": {
+      "get": {
+        "description": "Get the list of Threat Prevention Protections defined at Harmony Connect.",
+        "operationId": "getThreatPreventionProtections",
+        "parameters": [
+          {
+            "description": "Max objects to display",
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "default": 20,
+              "description": "Max objects to display",
+              "maximum": 100,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Filter only the objects which contain the matchSearch string",
+            "in": "query",
+            "name": "matchSearch",
+            "schema": {
+              "$ref": "#/components/schemas/MatchSearch"
+            }
+          },
+          {
+            "description": "Objects from offset",
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "default": 0,
+              "description": "Objects from offset",
+              "maximum": 1000000,
+              "minimum": 0,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/PaginationResponseBase"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "items": {
+                            "$ref": "#/components/schemas/ThreatPreventionProtection"
+                          },
+                          "type": "array"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/threatPreventionTechnologyProtections": {
+      "get": {
+        "description": "Get the list of Threat Prevention Technology Protections defined at Harmony Connect.",
+        "operationId": "getThreatPreventionTechnologyProtections",
+        "parameters": [
+          {
+            "description": "Max objects to display",
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "default": 20,
+              "description": "Max objects to display",
+              "maximum": 100,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Filter only the objects which contain the matchSearch string",
+            "in": "query",
+            "name": "matchSearch",
+            "schema": {
+              "$ref": "#/components/schemas/MatchSearch"
+            }
+          },
+          {
+            "description": "Objects from offset",
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "default": 0,
+              "description": "Objects from offset",
+              "maximum": 1000000,
+              "minimum": 0,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/PaginationResponseBase"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "items": {
+                            "$ref": "#/components/schemas/ThreatPreventionTechnologyProtection"
+                          },
+                          "type": "array"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/trustProfiles": {
+      "get": {
+        "description": "Get the list of Trust Profiles defined at Harmony Connect.",
+        "operationId": "getTrustProfiles",
+        "parameters": [
+          {
+            "description": "Max objects to display",
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "default": 20,
+              "description": "Max objects to display",
+              "maximum": 100,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Filter only the objects which contain the matchSearch string",
+            "in": "query",
+            "name": "matchSearch",
+            "schema": {
+              "$ref": "#/components/schemas/MatchSearch"
+            }
+          },
+          {
+            "description": "Objects from offset",
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "default": 0,
+              "description": "Objects from offset",
+              "maximum": 1000000,
+              "minimum": 0,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/PaginationResponseBase"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "items": {
+                            "$ref": "#/components/schemas/BaseTrustProfile"
+                          },
+                          "type": "array"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "apiKey": []
+    }
+  ],
+  "servers": [
+    {
+      "url": "https://cloudinfra-gw.portal.checkpoint.com/app/harmonyconnect/v3"
+    }
+  ],
+  "x-cs-multi-instance": true
+}
