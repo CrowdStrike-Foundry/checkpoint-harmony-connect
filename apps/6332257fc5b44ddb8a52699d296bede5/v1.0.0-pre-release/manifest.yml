@@ -1,0 +1,30 @@
+app_id: 6332257fc5b44ddb8a52699d296bede5
+name: Checkpoint Harmony Connect
+description: ""
+logo: ""
+manifest_version: "2023-05-09"
+ignored: []
+ui:
+    homepage: ""
+    extensions: []
+    pages: {}
+    dashboards: {}
+    navigation: {}
+api_integrations:
+    - id: aaa7f360f43c44d083bc6cb5d58d124d
+      name: CheckPoint Harmony
+      description: ""
+      path: api-integrations/CheckPoint_Harmony.json
+rtr_scripts: []
+collections: []
+auth:
+    scopes: []
+    permissions: {}
+    roles: []
+functions: []
+workflows: []
+parsers: []
+logscale:
+    saved_searches: []
+lookup_files: []
+app_docs: []
